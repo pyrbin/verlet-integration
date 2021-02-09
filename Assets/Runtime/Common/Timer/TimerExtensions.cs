@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public static class TimerExtensions
 {
     public static Timer SpawnTimer(this GameObject self, float waitTime, bool oneShot = true)
