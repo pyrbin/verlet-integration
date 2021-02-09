@@ -2,7 +2,7 @@ using UnityEngine;
 
 public static class TimerExtensions
 {
-    public static Timer SpawnTimer(this GameObject self, float waitTime, bool oneShot = true)
+    public static Timer SpawnTimer(this MonoBehaviour self, float waitTime, bool oneShot = true)
     {
         var holder = new GameObject("Timer");
         holder.hideFlags = HideFlags.HideInHierarchy;
