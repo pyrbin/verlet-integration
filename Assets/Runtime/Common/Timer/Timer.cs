@@ -11,25 +11,6 @@ public interface ITimer
     void Pause(bool status = true);
 }
 
-public static class TimerExtensions
-{
-    // Create timer GameObject extension
-    public static Timer CreateTimer(this GameObject self, float waitTime, bool oneShot = true)
-    {
-        var gameObject = new GameObject("Timer");
-        gameObject.transform.parent = self.transform;
-        var timer = gameObject.AddComponent<Timer>();
-        timer.WaitTime = waitTime;
-        if (oneShot)
-        {
-            timer.OneShot = true;
-            timer.DestroyOnTimeout = true;
-            timer.Run();
-        }
-        return timer;
-    }
-}
-
 public class Timer : MonoBehaviour, ITimer
 {
     public bool AutoStart = false;
