@@ -1,13 +1,15 @@
-<p align="center">
-    <br><b> Verlet Integration Platformer</b><br>
-</p>
+ <h3 align="center">
+    <br><b>Verlet Integration Platformer</b><br>
+</h3>
 
 ---
 
 ## Overview
 
-Trying to refine the main "wire mechanic" of my latest game-jam [Outage in Outlettia](https://github.com/pyrbin/outage-in-outlettia)
-using verlet integration with collisions. May evolve to recreating the game aswell, we'll see 😎.
+Trying to refine the main _wire mechanic_ of my latest game-jam [Outage in Outlettia](https://github.com/pyrbin/outage-in-outlettia)
+using verlet integration with collisions.
+
+May evolve to recreating the game aswell, we'll see 😎.
 
 
 ---
