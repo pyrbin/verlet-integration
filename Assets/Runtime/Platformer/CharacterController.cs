@@ -7,13 +7,21 @@ public class CharacterController : MonoBehaviour
 {
     public float JumpImpulse = 7f;
     public float Speed = 2f;
-    public ContactFilter2D ContactFilter;
+
+    // Default Contact filter
+    public ContactFilter2D GroundedFilter = new ContactFilter2D
+    {
+        useNormalAngle = true,
+        maxNormalAngle = 135,
+        minNormalAngle = 45
+    };
 
     private Rigidbody2D Rigidbody;
     private bool ShouldJump;
     private float Movement;
 
-    public bool IsGrounded => Rigidbody.IsTouching(ContactFilter);
+    public bool IsGrounded => Rigidbody.IsTouching(GroundedFilter);
+
     public float2 Velocity => Rigidbody.velocity;
     public bool IsFalling => !IsGrounded && Velocity.y < 0;
 
