@@ -33,17 +33,22 @@ public class DebugDraw
         CircleInternal(center, math.right(), math.forward(), radius, color, duration);
     }
 
-    public static void Cross(float3 point, float duration)
+    public static void Cross(float2 point, Color color, float duration = 0)
+    {
+        DebugDraw.Cross(new float3(point, 0), 0.5f, color, duration);
+    }
+
+    public static void Cross(float3 point, float duration = 0)
     {
         DebugDraw.Cross(point, 0.5f, Color.white, duration);
     }
 
-    public static void Cross(float3 point, Color color, float duration)
+    public static void Cross(float3 point, Color color, float duration = 0)
     {
         DebugDraw.Cross(point, 0.5f, color, duration);
     }
 
-    public static void Cross(float3 point, float width, Color color, float duration)
+    public static void Cross(float3 point, float width, Color color, float duration = 0)
     {
         width *= 0.5f;
         Debug.DrawLine(point + new float3(width, 0f, width), point + new float3(-width, 0f, -width), color, duration);
