@@ -15,5 +15,7 @@ May evolve to recreating the game aswell, we'll see 😎.
 ---
 
 <p align="center">
+    <img width="64" height="auto" style="border-radius:50%" src="https://github.com/pyrbin.png?s=256">
+    <br>
     <b><a href="https://github.com/pyrbin">github/pyrbin 🐙</a> • <a href="https://pyrbin.itch.io/">itch.io/pyrbin 🎮</a></b>
 </p>
