@@ -4,23 +4,12 @@ using UnityEngine.Events;
 
 public class PhysicsEvents : MonoBehaviour
 {
-    [SerializeField]
-    private UnityEvent<Collision2D> OnCollisionEnter = new UnityEvent<Collision2D>();
-
-    [SerializeField]
-    private UnityEvent<Collision2D> OnCollisionStay = new UnityEvent<Collision2D>();
-
-    [SerializeField]
-    private UnityEvent<Collision2D> OnCollisionExit = new UnityEvent<Collision2D>();
-
-    [SerializeField]
-    private UnityEvent<Collider2D> OnTriggerEnter = new UnityEvent<Collider2D>();
-
-    [SerializeField]
-    private UnityEvent<Collider2D> OnTriggerStay = new UnityEvent<Collider2D>();
-
-    [SerializeField]
-    private UnityEvent<Collider2D> OnTriggerExit = new UnityEvent<Collider2D>();
+    public UnityEvent<Collision2D> OnCollisionEnter = new UnityEvent<Collision2D>();
+    public UnityEvent<Collision2D> OnCollisionStay = new UnityEvent<Collision2D>();
+    public UnityEvent<Collision2D> OnCollisionExit = new UnityEvent<Collision2D>();
+    public UnityEvent<Collider2D> OnTriggerEnter = new UnityEvent<Collider2D>();
+    public UnityEvent<Collider2D> OnTriggerStay = new UnityEvent<Collider2D>();
+    public UnityEvent<Collider2D> OnTriggerExit = new UnityEvent<Collider2D>();
 
     void OnCollisionEnter2D(Collision2D col)
     {
