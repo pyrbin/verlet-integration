@@ -9,55 +9,49 @@ using Unity.Collections;
 
 public static class WireSimulation
 {
-    public const int ITERATIONS = 50;
     public const float NODE_DISTANCE = .25f;
+
+    [BurstCompile]
+    public struct GravityJob : IJobParallelFor
+    {
+        public float StepTime;
+        public float2 Friction, Gravity;
+
+        public NativeArray<Node> Nodes;
+
+        public void Execute(int index)
+        {
+            var node = Nodes[index];
+
+            if (node.Constrained)
+                return;
+
+            var velocity = node.Velocity;
+            var acceleration = Gravity;
+
+            if (math.length(velocity) > 1f)
+            {
+                velocity = math.normalize(velocity) * 1f;
+            }
+
+            node.Previous = node.Position;
+            node.Position += velocity * (1f - Friction) + StepTime * acceleration;
+            Nodes[index] = node;
+        }
+    }
+
 
     [BurstCompile]
     public struct UpdateJob : IJob
     {
-        // Parameters
-        public float StepTime;
-        public float Executions;
-        public float2 Friction;
-        public float2 Gravity;
-
-        // Nodes
+        public int Iterations;
         public NativeArray<Node> Nodes;
 
         public void Execute()
         {
-            for (int i = 0; i < Executions; i++)
+            for (int i = 0; i < Iterations; i++)
             {
-                Simulate();
-                for (int j = 0; j < ITERATIONS; j++)
-                {
-                    ApplyConstraints();
-                }
-            }
-        }
-
-        private void Simulate()
-        {
-            var stepTimeSq = math.sqrt(StepTime);
-            for (int i = 0; i < Nodes.Length; i++)
-            {
-                var node = Nodes[i];
-
-                if (node.Constrained) continue;
-
-                var velocity = node.Velocity;
-                var acceleration = Gravity;
-
-                // Limiting maximum move gives the simulation more stability.
-                if (math.length(velocity) > 1f)
-                {
-                    velocity = math.normalize(velocity) * 1f;
-                }
-
-                node.Previous = node.Position;
-                node.Position += velocity * (1f - Friction) + stepTimeSq * acceleration;
-
-                Nodes[i] = node;
+                ApplyConstraints();
             }
         }
 

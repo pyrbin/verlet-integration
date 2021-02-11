@@ -5,17 +5,22 @@ using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
 using Unity.Mathematics;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public unsafe class Wire : MonoBehaviour
 {
     [Min(2)]
     public int TotalNodes = 200;
+    public int Iterations = 50;
 
     [Min(0.001f)]
     public float StepTime = 0.01f;
     public float MaxStep = 0.1f;
     public float2 Gravity = new float2(0, -1f);
+
+    public bool Gizmos = false;
 
     private NativeArray<WireSimulation.Node> Nodes;
 
@@ -24,7 +29,6 @@ public unsafe class Wire : MonoBehaviour
 
     private WireSimulation.UpdateJob Job;
     private JobHandle Handle;
-    private float timeAccum;
 
     public WireSimulation.Node[] NodeArray => Nodes.ToArray();
 
@@ -44,33 +48,28 @@ public unsafe class Wire : MonoBehaviour
         NodePtrAt(0)->Constrained = true;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private int CalcExecutions()
-    {
-        timeAccum += Time.deltaTime;
-        timeAccum = math.min(timeAccum, MaxStep);
-        var executions = (int)(timeAccum / StepTime);
-        timeAccum = timeAccum % StepTime;
-        return executions;
-    }
 
     private void Update()
     {
-        Job = new WireSimulation.UpdateJob
+        Handle = new WireSimulation.GravityJob
         {
-            Executions = CalcExecutions(),
             Gravity = Gravity,
             Friction = 0.5f,
             Nodes = Nodes,
-            StepTime = StepTime,
-        };
+            StepTime = math.sqrt(StepTime),
+        }.Schedule(Nodes.Length, 16, Handle);
 
-        Handle = Job.Schedule();
+        Handle = new WireSimulation.UpdateJob
+        {
+            Nodes = Nodes,
+            Iterations = Iterations
+        }.Schedule(Handle);
     }
 
     private void LateUpdate()
     {
         Handle.Complete();
+
         transform.position = new float3(Nodes[0].Position, transform.position.z);
 
         // @todo remove
@@ -85,3 +84,33 @@ public unsafe class Wire : MonoBehaviour
     }
 
 }
+
+#if UNITY_EDITOR
+public static class WireGizmos
+{
+    [DrawGizmo(GizmoType.Active | GizmoType.NotInSelectionHierarchy | GizmoType.InSelectionHierarchy)]
+    private static void DrawZoneBounds(Wire wire, GizmoType gizmoType)
+    {
+        if (!Application.isPlaying || !wire.Gizmos)
+        {
+            return;
+        }
+
+        for (int i = 0; i < wire.NodeArray.Length - 1; i++)
+        {
+            if (i % 2 == 0)
+            {
+                Gizmos.color = Color.green;
+            }
+            else
+            {
+                Gizmos.color = Color.white;
+            }
+
+            Gizmos.DrawLine(
+                new float3(wire.NodeArray[i].Position, 0),
+                new float3(wire.NodeArray[i + 1].Position, 0));
+        }
+    }
+}
+#endif
